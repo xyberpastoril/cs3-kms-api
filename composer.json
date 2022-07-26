@@ -11,6 +11,7 @@
         "laravel/framework": "^9.19",
         "laravel/passport": "^10.4",
         "laravel/tinker": "^2.7",
+        "lorisleiva/laravel-actions": "^2.4",
         "ramsey/uuid": "^4.3"
     },
     "require-dev": {
