@@ -2,11 +2,13 @@
 
 namespace App\Models\Core;
 
+use App\Models\Scopes\WithTrashedScope;
 use Dyrynda\Database\Support\BindsOnUuid;
 use Dyrynda\Database\Support\GeneratesUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 class Question extends Model
 {
@@ -29,11 +31,6 @@ class Question extends Model
     }
 
     /**
-     * TODO:
-     * --> Automatically create uuid, and update token for each question.
-     */
-
-    /**
      * Relationships
      */
 
@@ -46,6 +43,9 @@ class Question extends Model
     }
 
     public function answers() {
+        if(Auth::guard('api')->check()) {
+            return $this->hasMany(Answer::class)->withTrashed();
+        }
         return $this->hasMany(Answer::class);
     }
 
@@ -56,7 +56,7 @@ class Question extends Model
         return $this->belongsTo(Answer::class, 'parent_answer_id', 'id');
     }
 
-    public function waitingForAnswers() {
-        return $this->hasMany(WaitingForAnswer::class);
+    public function waitlisters() {
+        return $this->hasMany(Waitlister::class);
     }
 }

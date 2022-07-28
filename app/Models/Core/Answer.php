@@ -3,17 +3,20 @@
 namespace App\Models\Core;
 
 use App\Models\User;
+use Dyrynda\Database\Support\BindsOnUuid;
+use Dyrynda\Database\Support\GeneratesUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Answer extends Model
 {
-    use HasFactory;
+    use HasFactory, GeneratesUuid, BindsOnUuid, SoftDeletes;
 
     protected $fillable = [
         'question_id',
         'user_id',
-        'answer',
+        'content',
     ];
 
     /**

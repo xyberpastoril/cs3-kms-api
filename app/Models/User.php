@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Auth\EmailChange;
 use App\Models\Auth\PasswordReset;
 use App\Models\Core\Answer;
+use Dyrynda\Database\Support\BindsOnUuid;
 use Dyrynda\Database\Support\GeneratesUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -13,7 +14,7 @@ use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, GeneratesUuid;
+    use HasApiTokens, HasFactory, Notifiable, GeneratesUuid, BindsOnUuid;
 
     /**
      * The attributes that are mass assignable.

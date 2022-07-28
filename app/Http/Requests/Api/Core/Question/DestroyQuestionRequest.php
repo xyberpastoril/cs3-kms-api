@@ -7,7 +7,7 @@ use App\Models\Core\Question;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
-class UpdateQuestionRequest extends FormRequest
+class DestroyQuestionRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -34,7 +34,7 @@ class UpdateQuestionRequest extends FormRequest
     public function rules()
     {
         return [
-            'content' => ['required'],
+            //
         ];
     }
 
@@ -45,6 +45,7 @@ class UpdateQuestionRequest extends FormRequest
 
         $this->merge([
             'question' => $question,
+            'update_token' => $this->route('update_token'),
         ]);
     }
 
@@ -58,7 +59,7 @@ class UpdateQuestionRequest extends FormRequest
             $this->question->load('answers');
 
             if(count($this->question->answers) && !Auth::guard('api')->check()) {
-                $validator->errors()->add('content', 'You can no longer update this question because it already has an answer.');
+                $validator->errors()->add('content', 'You can no longer delete this question because it already has an answer.');
             }
         });
     }

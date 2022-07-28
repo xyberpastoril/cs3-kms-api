@@ -2,11 +2,12 @@
 
 namespace App\Http\Requests\Api\Core\Answer;
 
+use App\Models\Core\Answer;
 use App\Models\Core\Question;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
-class StoreAnswerRequest extends FormRequest
+class DestroyAnswerRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,7 +27,7 @@ class StoreAnswerRequest extends FormRequest
     public function rules()
     {
         return [
-            'content' => ['required'],
+            //
         ];
     }
 
@@ -35,8 +36,21 @@ class StoreAnswerRequest extends FormRequest
         $question = Question::where('uuid', $this->route('question'))
             ->firstOrFail();
 
+        $answer = Answer::where('uuid', $this->route('answer'))
+            ->firstOrFail();
+
         $this->merge([
             'question' => $question,
+            'answer' => $answer,
         ]);
+    }
+
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            if($this->answer->question_id != $this->question->id) {
+                $validator->errors()->add('question', 'Question must match the answer\'s source question.');
+            }
+        });
     }
 }

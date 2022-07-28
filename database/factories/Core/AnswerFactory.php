@@ -5,9 +5,9 @@ namespace Database\Factories\Core;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Core\Question>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Core\Answer>
  */
-class QuestionFactory extends Factory
+class AnswerFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -16,10 +16,10 @@ class QuestionFactory extends Factory
      */
     public function definition()
     {
-        $date = fake()->dateTimeBetween('2021-01-01', '2021-12-31');
+        $date = fake()->dateTimeBetween('2022-01-01', now());
 
         return [
-            'content' => fake()->sentence(),
+            'content' => fake()->text(),
             'created_at' => $date,
             'updated_at' => $date,
         ];

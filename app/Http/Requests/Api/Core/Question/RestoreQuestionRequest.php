@@ -2,9 +2,11 @@
 
 namespace App\Http\Requests\Api\Core\Question;
 
+use App\Models\Core\Question;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
-class WaitQuestionRequest extends FormRequest
+class RestoreQuestionRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +15,7 @@ class WaitQuestionRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return Auth::guard('api')->check();
     }
 
     /**
@@ -28,12 +30,11 @@ class WaitQuestionRequest extends FormRequest
         ];
     }
 
-    public function withValidator($validator)
+    protected function prepareForValidation()
     {
-        /**
-         * TODO: Alert user if the email is already
-         * added to the waitlist for the specific
-         * question.
-         */
+        $question = Question::where('uuid', $this->route('question'))
+            ->withTrashed()
+            ->firstOrFail();
+        $this->merge(['question' => $question]);
     }
 }

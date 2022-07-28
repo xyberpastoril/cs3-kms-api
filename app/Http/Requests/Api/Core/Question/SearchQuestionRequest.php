@@ -24,7 +24,15 @@ class SearchQuestionRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'query' => ['sometimes'],
         ];
+    }
+
+    protected function prepareForValidation()
+    {
+        // dd(  explode(' ', $this->input('query'))  );
+        $this->merge([
+            'query' => explode(' ', $this->input('query')),
+        ]);
     }
 }

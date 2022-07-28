@@ -11,49 +11,41 @@ use App\Models\Core\Category;
 class CategoryController extends Controller
 {
     /**
-     * TODO: This function shows all the categories.
-     * 
-     * @return JsonResponse
+     * This function shows all the categories.
      */
     public function showAll()
     {
-
+        // TODO: Implement showAll()
     }
 
     /**
-     * TODO: This function stores a category.
+     * This function stores a category.
      * 
      * It can only be done by admins.
-     * 
-     * @return JsonResponse
      */
     public function store(StoreCategoryRequest $request)
     {
-
+        // TODO: Implement store()
     }
 
     /**
-     * TODO: This function updates a category.
+     * This function updates a category.
      * 
      * It can only be done by admins.
-     * 
-     * @return JsonResponse
      */
     public function update(Category $category, UpdateCategoryRequest $request)
     {
-
+        // TODO: Implement update()
     }
 
     /**
-     * TODO: This function destroys a category. Questions part of it won't be
+     * This function destroys a category. Questions part of it won't be
      * affected.
      * 
      * It can only be done by admins.
-     * 
-     * @return JsonResponse
      */
     public function destroy(Category $category)
     {
-        
+        // TODO: Implement destroy()
     }
 }
