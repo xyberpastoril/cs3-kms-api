@@ -18,6 +18,7 @@ class CreateWaitlistersTable extends Migration
             $table->uuid();
             $table->integer('question_id');
             $table->string('email');
+            $table->timestamp('created_at', 0)->nullable();
         });
     }
 
