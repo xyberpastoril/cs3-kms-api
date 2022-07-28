@@ -30,7 +30,6 @@ class SearchQuestionRequest extends FormRequest
 
     protected function prepareForValidation()
     {
-        // dd(  explode(' ', $this->input('query'))  );
         $this->merge([
             'query' => explode(' ', $this->input('query')),
         ]);
