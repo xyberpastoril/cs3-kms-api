@@ -26,7 +26,7 @@ class StoreQuestionRequest extends FormRequest
         // TODO: Include category and tags.
 
         return [
-            'email' => ['sometimes', 'email'],
+            'email' => ['required', 'email'],
             'content' => ['required'],
         ];
     }
