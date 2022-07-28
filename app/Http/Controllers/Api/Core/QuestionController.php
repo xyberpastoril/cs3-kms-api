@@ -59,8 +59,6 @@ class QuestionController extends Controller
      * 
      * If the token does not exist, $canUpdate will be 
      * automatically false.
-     * 
-     * * TESTED
      */
     public function show(ShowQuestionRequest $request)
     {
@@ -97,8 +95,6 @@ class QuestionController extends Controller
      * 
      * Lastly, an email will be sent as acknowledgement to the question
      * owner. Admins will also be notified that there's a new question.
-     * 
-     * * TESTED
      */
     public function store(StoreQuestionRequest $request)
     {
@@ -142,8 +138,6 @@ class QuestionController extends Controller
      * 
      * However, admins can revise this question to make it more readable.
      * They can also revise the category/tags as the admins see fit.
-     * 
-     * * TESTED
      */
     public function update(UpdateQuestionRequest $request)
     {
@@ -169,8 +163,6 @@ class QuestionController extends Controller
      * 
      * When done by the admins, it will be soft-deleted.
      * Otherwise, force delete.
-     * 
-     * * TESTED
      */
     public function destroy(DestroyQuestionRequest $request)
     {
@@ -198,8 +190,6 @@ class QuestionController extends Controller
      * This function restores the soft deleted question.
      * 
      * It can only be done by admins (in case it was accidentally deleted).
-     * 
-     * * TESTED
      */
     public function restore(RestoreQuestionRequest $request)
     {

@@ -29,8 +29,6 @@ class AnswerController extends Controller
      * 
      * Moreover, past answers will be kept in the database for
      * reference by the admins.
-     * 
-     * * TESTED
      */
     public function store(StoreAnswerRequest $request)
     {
@@ -41,7 +39,6 @@ class AnswerController extends Controller
             'content' => $input['content'],
             'user_id' => Auth::guard('api')->id(),
         ]);
-
         $route['question']->answers()->save($answer);
 
         $route['question']->load('waitlisters');
@@ -78,8 +75,6 @@ class AnswerController extends Controller
      * This function destroys an answer of a specific question.
      * 
      * It can only be done by admins.
-     * 
-     * * TESTED
      */
     public function destroy(DestroyAnswerRequest $request)
     {

@@ -20,8 +20,6 @@ class WaitlistController extends Controller
      * 
      * This can only be done when the question does not have any
      * answered questions.
-     * 
-     * * TESTED
      */
     public function store(StoreWaitlisterRequest $request)
     {
@@ -50,8 +48,6 @@ class WaitlistController extends Controller
      * 
      * The user can opt to be removed from the waitlist even if the question
      * already has answers (for privacy purposes).
-     * 
-     * * TESTED
      */
     public function destroy(DestroyWaitlisterRequest $request)
     {
