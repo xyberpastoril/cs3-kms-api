@@ -34,7 +34,7 @@ class StoreWaitlisterRequest extends FormRequest
 
     protected function prepareForValidation()
     {
-        $question = Question::select('questions.id', 'answers.count as answer_count')
+        $question = Question::select('questions.id', 'questions.content', 'answers.count as answer_count')
             ->where('uuid', $this->route('question'))
             ->leftJoinSub(
                 Answer::select('question_id', DB::raw('count(*) as count'))
