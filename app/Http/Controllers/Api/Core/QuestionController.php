@@ -2,34 +2,48 @@
 
 namespace App\Http\Controllers\Api\Core;
 
+use App\Actions\Api\Auth\VerifyQuestionToken;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\Core\Question\DestroyQuestionRequest;
+use App\Http\Requests\Api\Core\Question\RestoreQuestionRequest;
 use App\Http\Requests\Api\Core\Question\SearchQuestionRequest;
 use App\Http\Requests\Api\Core\Question\ShowQuestionRequest;
 use App\Http\Requests\Api\Core\Question\StoreQuestionRequest;
 use App\Http\Requests\Api\Core\Question\UpdateQuestionRequest;
-use App\Http\Requests\Api\Core\Question\WaitQuestionRequest;
 use App\Models\Core\Question;
+use App\Models\Core\Waitlister;
+use App\Services\Api\Core\Question\SearchQuestionService;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+
 // use Illuminate\Http\Request;
 
 class QuestionController extends Controller
 {
     /**
-     * TODO: This function serves the search results based on the query string.
+     * This function serves the search results based on the query string.
      * Additional filters may be included such as the category, and tags.
      * 
      * As a user, answered questions will be ranked first.
      * As an admin, unanswered questions will be ranked first.
-     * Create actions to decongest this function.
-     * 
-     * @return JsonResponse
      */
-    public function search(SearchQuestionRequest $request)
+    public function search(SearchQuestionRequest $request, SearchQuestionService $service)
     {
+        $input = $request->safe()->only('query');
+        
+        if(isset($input['query'])) {
+            $service->addKeywords($input['query']);
+        }
+        $service->order();
+        
+        // TODO: Add category filter
+        // TODO: Add tags filter
 
+        return response()->json($service->getResults());
     }
 
     /**
-     * TODO: This function shows the questions' content and may include
+     * This function shows the questions' content and may include
      * answers if there are any.
      * 
      * If the token parameter exists, check if the token is legitimate.
@@ -42,35 +56,77 @@ class QuestionController extends Controller
      * If the token does not exist, $canUpdate will be 
      * automatically false.
      * 
-     * @return JsonResponse
+     * * TESTED
      */
-    public function show(Question $question, ShowQuestionRequest $request)
+    public function show(ShowQuestionRequest $request)
     {
-        
+        $route = $request->only('question', 'update_token');
+
+        /**
+         * Determine if the user is allowed to update or destroy the question.
+         * 
+         * If there's no answer, the owner of the question and the admins can update or destroy it.
+         * Otherwise, only the admin can update or destroy it.
+         */
+        $isOwner = VerifyQuestionToken::run($route['question'], $route['update_token']);
+        $canUpdate = Auth::guard('api')->check() || ($isOwner && !$route['question']->answers);
+
+        // Call relationships
+        $route['question']->load('answers', 'tags', 'category');
+
+        return response()->json([
+            'question' => $route['question'],
+            'canUpdate' => $canUpdate,
+            'isOwner' => $isOwner,
+        ]);
     }
 
     /**
-     * TODO: This function stores a question from an outside user. 
+     * This function stores a question from an outside user. 
      * It only requires an email and the question. 
      * 
-     * Then it generates a token and sends an email as acknowledgement 
+     * Next, it generates a token and sends an email as acknowledgement 
      * that the user created a question to the app and will be informed 
      * when there is a new answer.
      * 
-     * Lastly, it will be stored to the database.
+     * Then, it will be stored to the database.
      * 
-     * TODO: Attempt to send an email using Queue instead of the usual
-     * loading when it is processed by the server during the request.
+     * Lastly, an email will be sent as acknowledgement to the question
+     * owner. Admins will also be notified that there's a new question.
      * 
-     * @return JsonResponse
+     * * TESTED
      */
     public function store(StoreQuestionRequest $request)
     {
+        $input = $request->safe()->only('content', 'email');
 
+        // TODO: Include question tags and category.
+
+        $question = Question::create([
+            'content' => $input['content'],
+        ]);
+
+        if(isset($input['email']) && $input['email']) {
+            $question->waitlisters()->save(new Waitlister([
+                'email' => $input['email'],
+                'question_id' => $question->id,
+            ]));
+
+            // TODO: Send email to owner as acknowledgement with link to the question 
+            // (embedded with token) [Try with queue]
+        }
+
+        // TODO: Send email to the admins as notification of a new question.
+        // TODO ADDT.: Only those who opted.
+
+        return response()->json([
+            'message' => 'Question created successfully.',
+            'question' => $question,
+        ]);
     }
 
     /**
-     * TODO: This function updates a question. However, this can only be done
+     * This function updates a question. However, this can only be done
      * when there is still no answer from the admins.
      * 
      * It requires an update token from the question owner to edit the
@@ -78,45 +134,74 @@ class QuestionController extends Controller
      * 
      * However, admins can revise this question to make it more readable.
      * They can also revise the category/tags as the admins see fit.
-     * Moreover, the question owner will be informed by the change.
      * 
-     * @return JsonResponse
+     * * TESTED
      */
-    public function update(Question $question, UpdateQuestionRequest $request)
+    public function update(UpdateQuestionRequest $request)
     {
-        return 'check';
+        $input = $request->safe()->only('content');
+        $route = $request->only('question');
+
+        // TODO: Update the question tags and category if they are changed.
+
+        $route['question']->content = $input['content'];
+        $route['question']->save();
+
+        return response()->json([
+            'message' => 'Question updated successfully.',
+            'question' => $route['question'],
+        ]);
     }
 
     /**
-     * TODO: This function adds a certain user to the waitlist of the answer
-     * of the specific question.
+     * This function destroys the question, but only if there's no answer.
      * 
-     * This can only be done when the question does not have any
-     * answered questions.
-     * 
-     * @return JsonResponse
-     */
-    public function wait(Question $question, WaitQuestionRequest $request)
-    {
-
-    }
-
-    /**
-     * TODO: This function destroys the question, regardless if there's an
-     * answer or not.
-     * 
-     * This function can only be done by admins (in case it sounds
+     * It can only be done by admins (in case it sounds
      * inappropriate) or the question owner.
      * 
-     * When done by the admins, it will be soft-deleted. A reason will
-     * be required which will be sent to the question owner.
+     * When done by the admins, it will be soft-deleted.
+     * Otherwise, force delete.
      * 
-     * Otherwise, force delete and admins won't be informed by this.
-     * 
-     * @return JsonResponse
+     * * TESTED
      */
-    public function destroy(Question $question)
+    public function destroy(DestroyQuestionRequest $request)
     {
+        $route = $request->only('question', 'update_token');
         
+        /**
+         * Determine if the question will be force deleted or not.
+         */
+        if(Auth::guard('api')->check() && !$route['update_token']) {
+            $route['question']->delete();
+        } else {
+            // TODO: Look after the deletion of the questions' relationships.
+            // $question->waitlisters()->delete();
+            // $question->answers()->delete();
+            $route['question']->forceDelete();
+        }
+
+        return response()->json([
+            'message' => 'Question deleted successfully.',
+            'question' => $route['question'],
+        ]);
+    }
+
+    /**
+     * This function restores the soft deleted question.
+     * 
+     * It can only be done by admins (in case it was accidentally deleted).
+     * 
+     * * TESTED
+     */
+    public function restore(RestoreQuestionRequest $request)
+    {
+        $route = $request->only('question');
+
+        $route['question']->restore();
+
+        return response()->json([
+            'message' => 'Question restored successfully.',
+            'question' => $route['question'],
+        ]);
     }
 }

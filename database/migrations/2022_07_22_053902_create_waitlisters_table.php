@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateWaitingForAnswersTable extends Migration
+class CreateWaitlistersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,9 @@ class CreateWaitingForAnswersTable extends Migration
      */
     public function up()
     {
-        Schema::create('waiting_for_answers', function (Blueprint $table) {
+        Schema::create('waitlisters', function (Blueprint $table) {
             $table->id();
+            $table->uuid();
             $table->integer('question_id');
             $table->string('email');
         });
@@ -27,6 +28,6 @@ class CreateWaitingForAnswersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('waiting_for_answers');
+        Schema::dropIfExists('waitlisters');
     }
 }

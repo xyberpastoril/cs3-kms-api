@@ -23,8 +23,11 @@ class StoreQuestionRequest extends FormRequest
      */
     public function rules()
     {
+        // TODO: Include category and tags.
+
         return [
-            //
+            'email' => ['sometimes', 'email'],
+            'content' => ['required'],
         ];
     }
 }

@@ -15,11 +15,13 @@ class CreateAnswersTable extends Migration
     {
         Schema::create('answers', function (Blueprint $table) {
             $table->id();
+            $table->uuid('uuid');
             $table->integer('question_id');
             $table->integer('user_id')->comment("Who answered the question?");
-            $table->text('answer');
+            $table->text('content');
             $table->text('update_reason')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
