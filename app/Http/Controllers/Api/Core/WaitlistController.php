@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Api\Core;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Core\Waitlister\DestroyWaitlisterRequest;
 use App\Http\Requests\Api\Core\Waitlister\StoreWaitlisterRequest;
+use App\Mail\Api\Core\Waitlister\AddedToWaitlist;
 use App\Models\Core\Question;
 use App\Models\Core\Waitlister;
+use Illuminate\Support\Facades\Mail;
+
 // use Illuminate\Http\Request;
 
 class WaitlistController extends Controller
@@ -32,7 +35,7 @@ class WaitlistController extends Controller
             'question_id' => $route['question']->id,
         ]);
 
-        // TODO: Send email as acknowledgement.
+        Mail::to($input['email'])->queue(new AddedToWaitlist($waitlister, $route['question']));
 
         return response()->json([
             'message' => 'Successfully added your email to this question\'s waitlist. You will be notified when the answer is available.',

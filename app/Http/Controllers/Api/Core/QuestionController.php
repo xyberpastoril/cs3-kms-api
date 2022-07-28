@@ -10,11 +10,15 @@ use App\Http\Requests\Api\Core\Question\SearchQuestionRequest;
 use App\Http\Requests\Api\Core\Question\ShowQuestionRequest;
 use App\Http\Requests\Api\Core\Question\StoreQuestionRequest;
 use App\Http\Requests\Api\Core\Question\UpdateQuestionRequest;
+use App\Mail\Api\Core\Question\AskedQuestion;
+use App\Mail\Api\Core\Question\NewQuestion;
 use App\Models\Core\Question;
 use App\Models\Core\Waitlister;
+use App\Models\User;
 use App\Services\Api\Core\Question\SearchQuestionService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 // use Illuminate\Http\Request;
 
@@ -106,18 +110,22 @@ class QuestionController extends Controller
             'content' => $input['content'],
         ]);
 
-        if(isset($input['email']) && $input['email']) {
-            $question->waitlisters()->save(new Waitlister([
-                'email' => $input['email'],
-                'question_id' => $question->id,
-            ]));
+        $waitlister = new Waitlister([
+            'email' => $input['email'],
+            'question_id' => $question->id,
+        ]);
+        $question->waitlisters()->save($waitlister);
+        
+        //? Shall I refactor this part downwards or include above ones?
 
-            // TODO: Send email to owner as acknowledgement with link to the question 
-            // (embedded with token) [Try with queue]
+        Mail::to($input['email'])->queue(new AskedQuestion($waitlister, $question));
+
+        // TODO: Send emails only those who opted.
+        // ? PREREQUISITE: Account Settings > Notifications > New Question
+        $users = User::all();        
+        foreach($users as $user) {
+            Mail::to($user->email)->queue(new NewQuestion($question, $user));
         }
-
-        // TODO: Send email to the admins as notification of a new question.
-        // TODO ADDT.: Only those who opted.
 
         return response()->json([
             'message' => 'Question created successfully.',

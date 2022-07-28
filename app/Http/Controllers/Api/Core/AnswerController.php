@@ -7,8 +7,13 @@ use App\Http\Requests\Api\Core\Answer\DestroyAnswerRequest;
 use App\Http\Requests\Api\Core\Answer\RestoreAnswerRequest;
 use App\Http\Requests\Api\Core\Answer\StoreAnswerRequest;
 use App\Http\Requests\Api\Core\Answer\UpdateAnswerRequest;
+use App\Mail\Api\Core\Answer\AnsweredQuestion;
+use App\Mail\Api\Core\Answer\AnsweredQuestionWaitlister;
+use App\Mail\Api\Core\Answer\UpdatedAnswer;
+use App\Mail\Api\Core\Answer\UpdatedAnswerWaitlister;
 use App\Models\Core\Answer;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 // use Illuminate\Http\Request;
 
@@ -39,7 +44,29 @@ class AnswerController extends Controller
 
         $route['question']->answers()->save($answer);
 
-        // TODO: Send an email to users in the waitlist.
+        $route['question']->load('waitlisters');
+
+        // TODO: Refactor as AnswerEmailService.
+        foreach($route['question']->waitlisters as $key => $waitlister) 
+        {
+            if($route['question']->answers()->count() > 1) {
+                if($key == 0) {
+                    Mail::to($waitlister->email)->queue(new UpdatedAnswer($waitlister, $route['question'], $answer));
+                }
+                else {
+                    Mail::to($waitlister->email)->queue(new UpdatedAnswerWaitlister($waitlister, $route['question'], $answer));
+                }
+            }
+            else {
+                if($key == 0) {
+                    Mail::to($waitlister->email)->queue(new AnsweredQuestion($waitlister, $route['question'], $answer));
+                }
+                else {
+                    Mail::to($waitlister->email)->queue(new AnsweredQuestionWaitlister($waitlister, $route['question'], $answer));
+                }
+            }
+
+        }
 
         return response()->json([
             'message' => 'Answer submitted successfully.',
