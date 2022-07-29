@@ -23,8 +23,8 @@ class SearchQuestionService
             'questions.created_at', 
             'questions.updated_at', 
             DB::raw('answers_latest.updated_at as latest_answer_at'),
-            DB::raw('IFNULL(waitlist.count, 0) as waitlist_count'),
-            DB::raw('IFNULL(TIMESTAMPDIFF(DAY, answers_latest.updated_at, NOW()), 0) as days_since_latest_answer'),
+            DB::raw('coalesce(waitlist.count, 0) as waitlist_count'),
+            DB::raw('coalesce(TIMESTAMPDIFF(DAY, answers_latest.updated_at, NOW()), 0) as days_since_latest_answer'),
         )
         ->leftJoinSub(
             Answer::select('question_id', 'updated_at')->latest(),
