@@ -50,10 +50,9 @@
             "@php artisan key:generate --ansi"
         ],
         "post-install-cmd": [ 
-            "php artisan clear-compiled",
-            "composer update",
+            "php artisan clear-compiled", 
             "chmod -R 777 storage", 
-            "php artisan passport:keys",
+            "composer update",
             "echo -n $OAUTH_PRIVATE_KEY > storage/oauth-private.key", 
             "echo -n $OAUTH_PUBLIC_KEY > storage/oauth-public.key" 
         ]
