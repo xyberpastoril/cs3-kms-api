@@ -54,8 +54,6 @@ class SearchQuestionService
 
     /**
      * This function adds the main query to the search.
-     * 
-     * * TESTED
      */
     public function addKeywords($keywords)
     {
@@ -95,8 +93,6 @@ class SearchQuestionService
     /**
      * This function adds the order of the search intended for admins.
      * In this case, unanswered questions will be ranked first.
-     * 
-     * * TESTED
      */
     public function orderResultForAdmin()
     {
@@ -107,8 +103,6 @@ class SearchQuestionService
     /**
      * This function simplifies the orderBy clause intended for users.
      * In this case, latest answered questions will be ranked first.
-     * 
-     * * TESTED
      */
     public function orderResultForUser()
     {
@@ -117,7 +111,7 @@ class SearchQuestionService
     }
 
     /**
-     * 
+     * This function determines the order of the search based on the user context.
      */
     public function order()
     {
