@@ -2,6 +2,7 @@
 
 namespace App\Models\Core;
 
+use App\Casts\EncryptCast;
 use App\Models\User;
 use Dyrynda\Database\Support\BindsOnUuid;
 use Dyrynda\Database\Support\GeneratesUuid;
@@ -17,6 +18,16 @@ class Answer extends Model
         'question_id',
         'user_id',
         'content',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'content' => EncryptCast::class,
+        'update_reason' => EncryptCast::class,
     ];
 
     /**

@@ -2,6 +2,7 @@
 
 namespace App\Models\Auth;
 
+use App\Casts\EncryptCast;
 use App\Models\User;
 use Dyrynda\Database\Support\GeneratesUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -22,6 +23,15 @@ class EmailChange extends Model
     protected $fillable = [
         'user_id',
         'new_email',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'new_email' => EncryptCast::class,
     ];
 
     public function uuidColumn(): string
