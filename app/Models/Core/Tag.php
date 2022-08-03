@@ -2,6 +2,7 @@
 
 namespace App\Models\Core;
 
+use App\Casts\EncryptCast;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,6 +13,15 @@ class Tag extends Model
     protected $fillable = [
         'question_id',
         'name',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'name' => EncryptCast::class,
     ];
 
     /**
