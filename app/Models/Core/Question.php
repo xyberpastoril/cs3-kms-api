@@ -18,6 +18,7 @@ class Question extends Model
         'category_id',
         'parent_answer_id',
         'content',
+        'update_token',
     ];
 
     public function uuidColumn(): string
@@ -25,10 +26,14 @@ class Question extends Model
         return 'uuid';
     }
 
-    public function uuidColumns(): array
-    {
-        return ['uuid', 'update_token'];
-    }
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
+    protected $hidden = [
+        'update_token',
+    ];
 
     /**
      * Relationships
