@@ -2,6 +2,7 @@
 
 namespace App\Models\Core;
 
+use App\Casts\EncryptCast;
 use Carbon\Carbon;
 use Dyrynda\Database\Support\BindsOnUuid;
 use Dyrynda\Database\Support\GeneratesUuid;
@@ -15,6 +16,10 @@ class Waitlister extends Model
     protected $fillable = [
         'question_id',
         'email',
+    ];
+
+    protected $casts = [
+        'email' => EncryptCast::class,
     ];
 
     CONST UPDATED_AT = null;
