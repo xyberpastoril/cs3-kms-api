@@ -18,7 +18,9 @@ use App\Models\User;
 use App\Services\Api\Core\Question\SearchQuestionService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 // use Illuminate\Http\Request;
 
@@ -102,8 +104,10 @@ class QuestionController extends Controller
 
         // TODO: Include question tags and category.
 
+        $update_token = Str::uuid();
         $question = Question::create([
             'content' => $input['content'],
+            'update_token' => Hash::make($update_token),
         ]);
 
         $waitlister = new Waitlister([
@@ -113,6 +117,7 @@ class QuestionController extends Controller
         $question->waitlisters()->save($waitlister);
         
         //? Shall I refactor this part downwards or include above ones?
+        // TODO: Include naked update token in the email.
 
         Mail::to($input['email'])->queue(new AskedQuestion($waitlister, $question));
 
@@ -126,6 +131,7 @@ class QuestionController extends Controller
         return response()->json([
             'message' => 'Question created successfully.',
             'question' => $question,
+            'update_token' => $update_token, // TODO: Remove this later.
         ]);
     }
 

@@ -3,6 +3,7 @@
 namespace App\Actions\Api\Auth;
 
 use App\Models\Core\Question;
+use Illuminate\Support\Facades\Hash;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 class VerifyQuestionToken
@@ -14,7 +15,7 @@ class VerifyQuestionToken
         if (!$question) {
             return false;
         }
-        if ($question->update_token != $update_token) {
+        if(!Hash::check($update_token, $question->update_token)) {
             return false;
         }
         return true;
