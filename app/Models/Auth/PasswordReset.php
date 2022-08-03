@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class PasswordReset extends Model
 {
-    use HasFactory;
+    use HasFactory, GeneratesUuid;
 
     public $incrementing = false;
 
