@@ -16,7 +16,7 @@ class CreateEmailChangesTable extends Migration
         Schema::create('email_changes', function (Blueprint $table) {
             $table->uuid('token')->primary();
             $table->integer('user_id')->comment("Regarding expiration time, maybe a queue will do the trick, i guess? Should I look after this?");
-            $table->string('new_email');
+            $table->text('new_email');
             $table->timestamp('created_at', 0)->nullable();
         });
     }
