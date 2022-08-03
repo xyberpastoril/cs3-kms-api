@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\EncryptCast;
 use App\Models\Auth\EmailChange;
 use App\Models\Auth\PasswordReset;
 use App\Models\Core\Answer;
@@ -44,6 +45,8 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'email' => EncryptCast::class,
+        'name' => EncryptCast::class,
     ];
 
     /**
