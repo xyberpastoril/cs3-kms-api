@@ -73,7 +73,7 @@ class QuestionController extends Controller
          * Otherwise, only the admin can update or destroy it.
          */
         $isOwner = VerifyQuestionToken::run($route['question'], $route['update_token']);
-        $canUpdate = Auth::guard('api')->check() || ($isOwner && !$route['question']->answers);
+        $canUpdate = Auth::guard('api')->check() || ($isOwner && !count($route['question']->answers));
 
         // Call relationships
         $route['question']->load('answers', 'tags', 'category');
