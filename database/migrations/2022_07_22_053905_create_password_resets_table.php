@@ -14,7 +14,7 @@ class CreatePasswordResetsTable extends Migration
     public function up()
     {
         Schema::create('password_resets', function (Blueprint $table) {
-            $table->uuid('token')->primary();
+            $table->text('token');
             $table->integer('user_id')->comment("Regarding expiration time, maybe a queue will do the trick, i guess? Should I look after this?");
             $table->timestamp('created_at', 0)->nullable();
         });
