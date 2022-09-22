@@ -41,9 +41,9 @@ class Question extends Model
      *
      * @var array<string, string>
      */
-    protected $casts = [
-        'content' => EncryptCast::class,
-    ];
+    // protected $casts = [
+    //     'content' => EncryptCast::class,
+    // ];
 
     /**
      * Relationships

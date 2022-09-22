@@ -18,9 +18,9 @@ class Waitlister extends Model
         'email',
     ];
 
-    protected $casts = [
-        'email' => EncryptCast::class,
-    ];
+    // protected $casts = [
+    //     'email' => EncryptCast::class,
+    // ];
 
     CONST UPDATED_AT = null;
 

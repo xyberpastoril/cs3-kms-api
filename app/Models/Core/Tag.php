@@ -20,9 +20,9 @@ class Tag extends Model
      *
      * @var array<string, string>
      */
-    protected $casts = [
-        'name' => EncryptCast::class,
-    ];
+    // protected $casts = [
+    //     'name' => EncryptCast::class,
+    // ];
 
     /**
      * Relationships
