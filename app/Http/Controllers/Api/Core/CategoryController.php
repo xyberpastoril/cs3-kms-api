@@ -15,7 +15,7 @@ class CategoryController extends Controller
      */
     public function showAll()
     {
-        // TODO: Implement showAll()
+        // TODO: Implement showAll() method.
     }
 
     /**
