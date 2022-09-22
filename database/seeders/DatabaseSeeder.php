@@ -25,21 +25,21 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@test.dev',
         ]);
 
-        // \App\Models\User::factory()->count(10)->create();
+        \App\Models\User::factory()->count(10)->create();
 
-        // for($i = 0; $i < 100; $i++)
-        // {
-        //     \App\Models\Core\Question::factory()
-        //         ->has(\App\Models\Core\Waitlister::factory()
-        //             ->count(random_int(1, 10))
-        //         )
-        //         ->has(\App\Models\Core\Answer::factory()
-        //             ->count(random_int(0, 1))
-        //             ->state(new Sequence(
-        //                 fn ($sequence) => ['user_id' => User::all()->random()->id],
-        //             ))
-        //         )
-        //         ->create();
-        // }
+        for($i = 0; $i < 100; $i++)
+        {
+            \App\Models\Core\Question::factory()
+                ->has(\App\Models\Core\Waitlister::factory()
+                    ->count(random_int(1, 10))
+                )
+                ->has(\App\Models\Core\Answer::factory()
+                    ->count(random_int(0, 1))
+                    ->state(new Sequence(
+                        fn ($sequence) => ['user_id' => User::all()->random()->id],
+                    ))
+                )
+                ->create();
+        }
     }
 }
