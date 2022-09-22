@@ -1,0 +1,57 @@
+# fly.toml file generated for cs3-kms-api on 2022-09-22T09:37:54+08:00
+
+app = "cs3-kms-api"
+kill_signal = "SIGINT"
+kill_timeout = 5
+processes = []
+
+[build]
+  [build.args]
+    NODE_VERSION = "14"
+    PHP_VERSION = "8.0"
+
+[env]
+  APP_ENV = "debug"
+  APP_URL = "https://cs3-kms-api.fly.dev"
+  LOG_CHANNEL = "stderr"
+  LOG_LEVEL = "info"
+  LOG_STDERR_FORMATTER = "Monolog\\Formatter\\JsonFormatter"
+  DB_CONNECTION = "mysql"
+  DB_HOST = "ap-southeast.connect.psdb.cloud"
+  DB_PORT = "3306"
+  DB_DATABASE = "cs3-kms-db"
+  MYSQL_ATTR_SSL_CA = "/etc/ssl/certs/ca-certificates.crt"
+
+
+[experimental]
+  allowed_public_ports = []
+  auto_rollback = true
+
+[deploy]
+  release_command = "php /var/www/html/artisan migrate:fresh --force"
+
+[[services]]
+  http_checks = []
+  internal_port = 8080
+  processes = ["app"]
+  protocol = "tcp"
+  script_checks = []
+  [services.concurrency]
+    hard_limit = 25
+    soft_limit = 20
+    type = "connections"
+
+  [[services.ports]]
+    force_https = true
+    handlers = ["http"]
+    port = 80
+
+  [[services.ports]]
+    handlers = ["tls", "http"]
+    port = 443
+
+  [[services.tcp_checks]]
+    grace_period = "1s"
+    interval = "15s"
+    restart_limit = 0
+    timeout = "2s"
