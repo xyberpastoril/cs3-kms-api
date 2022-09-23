@@ -1,4 +1,4 @@
-# fly.toml file generated for cs3-kms-api on 2022-09-22T09:37:54+08:00
+# fly.toml file generated for cs3-kms-api on 2022-09-23T14:22:39+08:00
 
 app = "cs3-kms-api"
 kill_signal = "SIGINT"
@@ -10,14 +10,8 @@ processes = []
     NODE_VERSION = "14"
     PHP_VERSION = "8.0"
 
-[processes]
-  app = ""
-  worker = "php artisan queue:work --tries=10000"
-
 [env]
-  APP_ENV = "testing"
-  APP_DEBUG = "true"
-  APP_URL = "https://cs3-kms-api.fly.dev"
+  APP_ENV = "production"
   LOG_CHANNEL = "stderr"
   LOG_LEVEL = "info"
   LOG_STDERR_FORMATTER = "Monolog\\Formatter\\JsonFormatter"
@@ -25,6 +19,10 @@ processes = []
 [experimental]
   allowed_public_ports = []
   auto_rollback = true
+
+[processes]
+  app = ""
+  worker = "php artisan queue:work --tries=10000"
 
 [[services]]
   http_checks = []
