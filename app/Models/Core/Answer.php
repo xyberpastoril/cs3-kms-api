@@ -25,10 +25,10 @@ class Answer extends Model
      *
      * @var array<string, string>
      */
-    protected $casts = [
-        'content' => EncryptCast::class,
-        'update_reason' => EncryptCast::class,
-    ];
+    // protected $casts = [
+    //     'content' => EncryptCast::class,
+    //     'update_reason' => EncryptCast::class,
+    // ];
 
     /**
      * Relationships

@@ -45,8 +45,8 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'email' => EncryptCast::class,
-        'name' => EncryptCast::class,
+        // 'email' => EncryptCast::class,
+        // 'name' => EncryptCast::class,
     ];
 
     /**

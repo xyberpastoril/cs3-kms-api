@@ -20,10 +20,10 @@ class Category extends Model
      *
      * @var array<string, string>
      */
-    protected $casts = [
-        'name' => EncryptCast::class,
-        'description' => EncryptCast::class,
-    ];
+    // protected $casts = [
+    //     'name' => EncryptCast::class,
+    //     'description' => EncryptCast::class,
+    // ];
 
     /**
      * Relationships
