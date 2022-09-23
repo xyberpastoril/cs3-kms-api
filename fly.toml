@@ -12,14 +12,12 @@ processes = []
 
 [processes]
   app = ""
-  cron = "cron -f"
   worker = "php artisan queue:work --tries=10000"
 
 [env]
   APP_ENV = "testing"
   APP_DEBUG = "true"
   APP_URL = "https://cs3-kms-api.fly.dev"
-  QUEUE_CONNECTION = "database"
   LOG_CHANNEL = "stderr"
   LOG_LEVEL = "info"
   LOG_STDERR_FORMATTER = "Monolog\\Formatter\\JsonFormatter"
