@@ -12,6 +12,7 @@ processes = []
 
 [env]
   APP_ENV = "testing"
+  APP_DEBUG = "true"
   APP_URL = "https://cs3-kms-api.fly.dev"
   LOG_CHANNEL = "stderr"
   LOG_LEVEL = "info"
