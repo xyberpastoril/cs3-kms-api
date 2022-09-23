@@ -24,7 +24,7 @@ class SearchQuestionService
             'questions.updated_at', 
             DB::raw('answers_latest.updated_at as latest_answer_at'),
             DB::raw('coalesce(waitlist.count, 0) as waitlist_count'),
-            DB::raw('coalesce(EXTRACT(DAY FROM NOW() - answers_latest.updated_at), 0)::int as days_since_latest_answer')
+            DB::raw('coalesce(EXTRACT(DAY FROM NOW() - answers_latest.updated_at), 0) as days_since_latest_answer')
         )
         ->leftJoinSub(
             Answer::select('question_id', 'updated_at')->latest(),
